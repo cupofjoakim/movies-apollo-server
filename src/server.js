@@ -1,4 +1,4 @@
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer, AuthenticationError } from 'apollo-server';
 import path from 'path';
 import dotenv from 'dotenv';
 
@@ -13,6 +13,15 @@ if (process.env.NODE_ENV !== 'production') {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => {
+    // Basic security. In a real world application I'd suggest going with a JWT token with assymetric keys.
+    const token = (req.headers.authorization || '')
+      .replace('Bearer ', '');
+
+    if (token !== process.env.SECRET_KEY) {
+      throw new AuthenticationError(`Wrong secret`);
+    }
+  },
   dataSources: () => {
     return {
       OmdbAPI: new OmdbAPI(),
