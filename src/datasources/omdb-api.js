@@ -12,6 +12,7 @@ class OmdbAPI extends RESTDataSource {
   }
 
   async search(name) {
+    console.log(`Searching with query ${name}`);
     return this.get(`?s=${name}&type=movie`);
   }
 
