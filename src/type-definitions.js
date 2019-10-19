@@ -5,7 +5,24 @@ const typeDefs = gql`
     imdbid: ID!,
     title: String,
     year: String,
-    poster: String
+    poster: String,
+    released: String,
+    runtime: String,
+    director: String,
+    writer: String,
+    actors: [Actor],
+    language: String,
+    plot: String,
+    ratings: Rating,
+  }
+
+  type Actor {
+    name: String
+  }
+
+  type Rating {
+    source: String,
+    value: String,
   }
 
   type Query {
