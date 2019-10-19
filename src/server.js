@@ -1,36 +1,25 @@
-import { ApolloServer, gql } from 'apollo-server';
+import { ApolloServer } from 'apollo-server';
+import path from 'path';
+import dotenv from 'dotenv';
 
-const movies = [
-  {
-    title: "Se7en",
-    year: 1997
-  },
-  {
-    title: "Back to the future",
-    year: 1986
-  }
-]
+import typeDefs from './type-definitions';
+import resolvers from './resolvers';
+import OmdbAPI from './datasources/omdb-api';
 
-const resolvers = {
-  Query: {
-    movies: () => movies
-  }
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: path.resolve(__dirname, '../.env') });
 }
 
-const typeDefs = gql`
-  type Movie {
-    title: String,
-    year: Int
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  dataSources: () => {
+    return {
+      OmdbAPI: new OmdbAPI(),
+    };
   }
-
-  type Query {
-    movies: [Movie]
-  }
-`;
-
-const server = new ApolloServer({ typeDefs, resolvers });
+});
 
 server.listen().then(({ url }) => {
-  console.log(`Lets go, space cowboy 🤠✨`);
-  console.log(`Server ready at ${url}`);
-})
+  console.log(`🤠✨ Server ready at ${url}`);
+});
