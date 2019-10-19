@@ -13,7 +13,7 @@ const typeDefs = gql`
     actors: [Actor],
     language: String,
     plot: String,
-    ratings: Rating,
+    ratings: [Rating],
   }
 
   type Actor {
